@@ -1,42 +1,177 @@
+d:/github/练习/index.html -->
 <!DOCTYPE html>
 <html lang="zh-cn">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>我的网页</title>
+    <title>我的 Vue 网页</title>
+    <!-- 引入 Vue.js -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <!-- 引入 Element UI -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <!-- 引入图标库 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css">
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
+            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background-color: #f4f5f7;
             margin: 0;
             padding: 0;
+            color: #303133;
         }
-        header, footer {
-            background-color: #333;
+        .page-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        header {
+            background: linear-gradient(120deg, #409EFF, #67C23A);
             color: #fff;
-            padding: 1rem;
+            padding: 1.5rem;
             text-align: center;
+            box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+        }
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
         }
         main {
+            flex: 1;
             padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+            box-sizing: border-box;
         }
-        button {
-            padding: 0.5rem 1rem;
-            font-size: 1rem;
-            cursor: pointer;
+        .content-section {
+            background-color: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        .content-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        .card-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        .feature-card {
+            padding: 1.5rem;
+            border-radius: 8px;
+            background-color: #f9fafc;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        .feature-card:hover {
+            transform: scale(1.03);
+            background-color: #ecf5ff;
+        }
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: #409EFF;
+        }
+        footer {
+            background-color: #303133;
+            color: #fff;
+            padding: 1.5rem;
+            text-align: center;
+        }
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .social-links {
+            margin-top: 1rem;
+        }
+        .social-links a {
+            color: #fff;
+            margin: 0 10px;
+            font-size: 1.2rem;
+            transition: color 0.3s;
+        }
+        .social-links a:hover {
+            color: #409EFF;
         }
     </style>
 </head>
 <body>
-    <header>
-        <h1>欢迎来到我的网页</h1>
-    </header>
-    <main>
-        <p>这是一段简单的网页示例。</p>
-        <button onclick="alert('您好，世界！')">点击我</button>
-    </main>
-    <footer>
-        <p>&copy; 2025 我的网页</p>
-    </footer>
-</body>
-</html>
+    <div id="app" class="page-container">
+        <header>
+            <div class="header-content">
+                <div class="logo">{{ siteName }}</div>
+                <el-menu mode="horizontal" background-color="transparent" text-color="#fff" active-text-color="#ffd04b" :router="true">
+                    <el-menu-item v-for="(item, index) in navItems" :key="index" :index="item.path">
+                        <i :class="item.icon"></i>{{ item.name }}
+                    </el-menu-item>
+                </el-menu>
+            </div>
+        </header>
+
+        <main>
+            <div class="content-section">
+                <el-carousel height="300px">
+                    <el-carousel-item v-for="(banner, index) in banners" :key="index">
+                        <h3 class="banner-title" style="text-align: center; line-height: 300px; margin: 0; color: #409EFF; font-size: 2rem;">
+                            {{ banner.title }}
+                        </h3>
+                    </el-carousel-item>
+                </el-carousel>
+            </div>
+
+            <div class="content-section">
+                <h2>关于我们</h2>
+                <p>{{ description }}</p>
+                <el-button type="primary" @click="showNotification">了解更多</el-button>
+            </div>
+
+            <div class="content-section">
+                <h2>核心功能</h2>
+                <div class="card-container">
+                    <div class="feature-card" v-for="(feature, index) in features" :key="index">
+                        <div class="feature-icon">
+                            <i :class="feature.icon"></i>
+                        </div>
+                        <h3>{{ feature.title }}</h3>
+                        <p>{{ feature.description }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h2>留言板</h2>
+                <el-form :model="messageForm" label-width="80px">
+                    <el-form-item label="姓名">
+                        <el-input v-model="messageForm.name" placeholder="请输入您的姓名"></el-input>
+                    </el-form-item>
+                    <el-form-item label="留言">
+                        <el-input type="textarea" v-model="messageForm.content" :rows="4" placeholder="请输入您的留言"></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" @click="submitMessage">提交留言</el-button>
+                    </el-form-item>
+                </el-form>
+                
+                <div style="margin-top: 20px;" v-if="messages.length > 0">
+                    <h3>最新留言</h3>
+                    <el-timeline>
+                        <el-timeline-item v-for="(message, index) in messages" :key="index" :timestamp="message.time" placement="top">
+                            <el-card>
+                                <h4>{{ message.name }}</h4>
+                                <p>{{ message.content }}</p>
+                            </el-card>
+                        </el-timeline-item>
