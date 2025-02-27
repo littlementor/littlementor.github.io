@@ -1,10 +1,9 @@
-d:/github/练习/index.html -->
 <!DOCTYPE html>
 <html lang="zh-cn">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>我的 Vue 网页</title>
+    <title>学习笔记 - 个人技术博客</title>
     <!-- 引入 Vue.js -->
     <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
     <!-- 引入 Element UI -->
@@ -107,6 +106,18 @@ d:/github/练习/index.html -->
         .social-links a:hover {
             color: #409EFF;
         }
+        .blog-post {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #ebeef5;
+        }
+        .blog-date {
+            color: #909399;
+            font-size: 0.9rem;
+        }
+        .tag {
+            margin-right: 8px;
+        }
     </style>
 </head>
 <body>
@@ -134,13 +145,36 @@ d:/github/练习/index.html -->
             </div>
 
             <div class="content-section">
-                <h2>关于我们</h2>
+                <h2>关于我</h2>
                 <p>{{ description }}</p>
+                <p>我是一名热爱技术的开发者，专注于Web前端和人工智能领域。这个博客是我记录学习笔记、分享技术心得的地方。希望我的文章能够帮助到你！</p>
                 <el-button type="primary" @click="showNotification">了解更多</el-button>
             </div>
 
             <div class="content-section">
-                <h2>核心功能</h2>
+                <h2>最新博文</h2>
+                <div class="blog-posts">
+                    <div class="blog-post" v-for="(post, index) in blogPosts" :key="index">
+                        <h3>{{ post.title }}</h3>
+                        <p class="blog-date">发布于 {{ post.date }}</p>
+                        <p>{{ post.summary }}</p>
+                        <div>
+                            <el-tag class="tag" v-for="(tag, tagIndex) in post.tags" :key="tagIndex" size="small">{{ tag }}</el-tag>
+                        </div>
+                        <el-button size="small" type="text" style="margin-top: 10px;">阅读全文</el-button>
+                    </div>
+                </div>
+                <el-pagination
+                    @current-change="handleCurrentChange"
+                    :current-page.sync="currentPage"
+                    :page-size="5"
+                    layout="prev, pager, next"
+                    :total="totalPosts">
+                </el-pagination>
+            </div>
+
+            <div class="content-section">
+                <h2>技术栈</h2>
                 <div class="card-container">
                     <div class="feature-card" v-for="(feature, index) in features" :key="index">
                         <div class="feature-icon">
@@ -175,3 +209,148 @@ d:/github/练习/index.html -->
                                 <p>{{ message.content }}</p>
                             </el-card>
                         </el-timeline-item>
+                    </el-timeline>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <div class="footer-content">
+                <p>&copy; 2025 {{ siteName }} - 所有权利保留</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-github"></i></a>
+                    <a href="#"><i class="fab fa-weixin"></i></a>
+                    <a href="#"><i class="fab fa-weibo"></i></a>
+                    <a href="#"><i class="fab fa-zhihu"></i></a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                siteName: '学习笔记',
+                description: '记录我的技术探索与成长历程',
+                currentPage: 1,
+                totalPosts: 23,
+                navItems: [
+                    { name: '首页', path: '/', icon: 'fas fa-home ' },
+                    { name: '博客', path: '/blog', icon: 'fas fa-blog ' },
+                    { name: '项目', path: '/projects', icon: 'fas fa-code ' },
+                    { name: '关于', path: '/about', icon: 'fas fa-user ' },
+                    { name: '联系', path: '/contact', icon: 'fas fa-envelope ' }
+                ],
+                banners: [
+                    { title: '分享技术，记录成长' },
+                    { title: '探索编程的奇妙世界' },
+                    { title: '学无止境，进步不止' }
+                ],
+                features: [
+                    { icon: 'fab fa-html5', title: '前端开发', description: 'HTML5, CSS3, JavaScript, Vue.js等前端技术的学习笔记和实践经验分享' },
+                    { icon: 'fab fa-node-js', title: '后端技术', description: 'Node.js, Express, MongoDB等后端开发技术的深入研究和应用案例' },
+                    { icon: 'fas fa-mobile-alt', title: '移动应用', description: '探索移动应用开发的最新趋势和实用技巧，包括响应式设计和原生应用开发' },
+                    { icon: 'fas fa-brain', title: '人工智能', description: '机器学习和深度学习基础知识学习，以及在实际项目中的应用' },
+                    { icon: 'fas fa-tools', title: '开发工具', description: '高效的开发工具和环境配置，提高编程效率的实用技巧' },
+                    { icon: 'fas fa-book', title: '学习资源', description: '精选的编程学习资源，包括书籍推荐、教程链接和学习方法分享' }
+                ],
+                blogPosts: [
+                    {
+                        title: 'Vue3 组合式API深入解析',
+                        date: '2025-02-20',
+                        summary: '本文详细介绍了Vue3中组合式API的使用方法及其优势，通过实例展示如何优雅地组织逻辑代码。',
+                        tags: ['Vue.js', '前端框架', '教程']
+                    },
+                    {
+                        title: 'JavaScript异步编程最佳实践',
+                        date: '2025-02-15',
+                        summary: '从回调函数到Promise，再到async/await，本文全面介绍JavaScript异步编程的演进和最佳实践。',
+                        tags: ['JavaScript', '异步编程', '实践指南']
+                    },
+                    {
+                        title: '使用TensorFlow.js构建智能Web应用',
+                        date: '2025-02-07',
+                        summary: '探索如何在浏览器环境中运行机器学习模型，打造智能化的Web应用体验。',
+                        tags: ['机器学习', 'TensorFlow.js', 'Web应用']
+                    },
+                    {
+                        title: 'CSS Grid布局完全指南',
+                        date: '2025-01-28',
+                        summary: '详细讲解CSS Grid布局系统的各项特性和使用技巧，帮助你构建复杂而灵活的页面布局。',
+                        tags: ['CSS', '页面布局', '前端设计']
+                    },
+                    {
+                        title: 'Git工作流与团队协作',
+                        date: '2025-01-20',
+                        summary: '分享高效的Git分支策略和工作流程，提升团队协作效率，减少合并冲突。',
+                        tags: ['Git', '团队协作', '版本控制']
+                    }
+                ],
+                messageForm: {
+                    name: '',
+                    content: ''
+                },
+                messages: [
+                    {
+                        name: '张三',
+                        content: '博客内容非常实用，特别是关于Vue3的那篇文章给我很大启发！',
+                        time: '2025-02-25 14:23'
+                    },
+                    {
+                        name: '李四',
+                        content: '请问有没有React相关的教程推荐？期待看到更多前端框架的对比分析。',
+                        time: '2025-02-23 09:15'
+                    },
+                    {
+                        name: '王五',
+                        content: '博主的文章条理清晰，解释深入浅出，非常适合像我这样的初学者！',
+                        time: '2025-02-21 18:37'
+                    }
+                ]
+            },
+            methods: {
+                showNotification() {
+                    this.$notify({
+                        title: '欢迎',
+                        message: '感谢访问我的个人博客，希望这里的内容能对你有所帮助！',
+                        type: 'success',
+                        duration: 3000
+                    });
+                },
+                submitMessage() {
+                    if (!this.messageForm.name || !this.messageForm.content) {
+                        this.$message.error('请填写完整的留言信息');
+                        return;
+                    }
+                    
+                    const now = new Date();
+                    const time = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+                    
+                    this.messages.unshift({
+                        name: this.messageForm.name,
+                        content: this.messageForm.content,
+                        time: time
+                    });
+                    
+                    this.$message({
+                        message: '留言提交成功！',
+                        type: 'success'
+                    });
+                    
+                    this.messageForm.name = '';
+                    this.messageForm.content = '';
+                },
+                handleCurrentChange(val) {
+                    console.log(`当前页: ${val}`);
+                    // 这里可以添加分页加载逻辑
+                }
+            },
+            mounted() {
+                // 页面加载完成后执行的操作
+                console.log('博客页面加载完成');
+            }
+        });
+    </script>
+</body>
+</html>
